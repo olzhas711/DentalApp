@@ -19,6 +19,8 @@ import CartScreen from '../screens/CartScreen';
 import DoctorScheduleScreen from '../screens/DoctorScheduleScreen';
 import PatientAppointmentsScreen from '../screens/PatientAppointmentsScreen';
 import ChatScreen from '../screens/ChatScreen';
+import SpecialistsScreen from '../screens/SpecialistsScreen';
+import ContactsScreen from '../screens/ContactsScreen';
 
 const CartIcon = () => {
   const navigation = useNavigation();
@@ -26,7 +28,7 @@ const CartIcon = () => {
   const itemCount = cartItems.reduce((total, item) => total + item.quantity, 0);
 
   return (
-    <TouchableOpacity 
+    <TouchableOpacity
       style={{ padding: 8, marginRight: 8 }}
       onPress={() => navigation.navigate('Cart')}
     >
@@ -83,11 +85,12 @@ const MainTabs = () => {
       case 'О клинике': iconName = 'info'; break;
       case 'Услуги': iconName = 'medical-services'; break;
       case 'Магазин': iconName = 'shopping-cart'; break;
-      case 'Запись': iconName = 'event'; break;
       case 'Профиль': iconName = 'person'; break;
       case 'Акции': iconName = 'local-offer'; break;
       case 'Расписание': iconName = 'schedule'; break;
       case 'Мои записи': iconName = 'event-note'; break;
+      case 'Специалисты': iconName = 'group'; break;
+      case 'Контакты': iconName = 'contacts'; break;
       default: iconName = 'circle';
     }
     return (
@@ -114,27 +117,12 @@ const MainTabs = () => {
       <Tab.Screen name="О клинике" component={AboutScreen} />
       <Tab.Screen name="Услуги" component={ServicesScreen} />
       {!isDoctor && <Tab.Screen name="Магазин" component={ShopScreen} />}
-      {!isDoctor && <Tab.Screen name="Запись" component={AppointmentScreen} />}
+      <Tab.Screen name="Специалисты" component={SpecialistsScreen} />
+      <Tab.Screen name="Контакты" component={ContactsScreen} />
+      {user && <Tab.Screen name="Профиль" component={ProfileScreen} />}
+      {!isDoctor && user && <Tab.Screen name="Мои записи" component={PatientAppointmentsScreen} />}
       {isDoctor && <Tab.Screen name="Расписание" component={DoctorScheduleScreen} />}
-      <Tab.Screen name="Профиль" component={ProfileScreen} />
       {!isDoctor && <Tab.Screen name="Акции" component={PromotionsScreen} />}
-      {!isDoctor && (
-        <Tab.Screen 
-          name="Мои записи" 
-          component={PatientAppointmentsScreen}
-          options={{
-            tabBarIcon: ({ color, size }) => (
-              <TabIcon
-                focused={false}
-                color={color}
-                size={size}
-                name="event-note"
-                hasUnread={hasUnreadMessages}
-              />
-            ),
-          }}
-        />
-      )}
     </Tab.Navigator>
   );
 };
@@ -147,29 +135,37 @@ const AppNavigator = () => {
       }}
     >
       <Stack.Screen name="Main" component={MainTabs} />
-      <Stack.Screen 
-        name="Auth" 
+      <Stack.Screen
+        name="Auth"
         component={AuthScreen}
         options={{
           headerShown: true,
           title: 'Авторизация'
         }}
       />
-      <Stack.Screen 
-        name="Cart" 
+      <Stack.Screen
+        name="Cart"
         component={CartScreen}
         options={{
           headerShown: true,
           title: 'Корзина'
         }}
       />
-      <Stack.Screen 
-        name="Chat" 
+      <Stack.Screen
+        name="Chat"
         component={ChatScreen}
         options={({ route }) => ({
           headerShown: true,
           title: `Чат с ${route.params.recipient.name}`
         })}
+      />
+      <Stack.Screen
+        name="Appointment"
+        component={AppointmentScreen}
+        options={{
+          headerShown: true,
+          title: 'Запись на прием'
+        }}
       />
     </Stack.Navigator>
   );
@@ -189,4 +185,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AppNavigator; 
+export default AppNavigator;

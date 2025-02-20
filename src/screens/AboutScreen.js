@@ -1,83 +1,64 @@
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, ImageBackground, Image } from 'react-native';
-import { useAuth } from '../context/AuthContext';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-const doctors = [
-  {
-    id: 'doctor@test.com',
-    name: 'Др. Иван Иванов',
-    specialization: 'Стоматолог-терапевт',
-    experience: '10 лет опыта',
-    image: require('../assets/doctor1.png'),
-  },
-  {
-    id: 'doctor2@test.com',
-    name: 'Др. Мария Петрова',
-    specialization: 'Ортодонт',
-    experience: '8 лет опыта',
-    image: require('../assets/doctor2.png'),
-  },
-];
-
 const AboutScreen = ({ navigation }) => {
-  const { user } = useAuth();
-
-  const handleChatWithClinic = () => {
-    if (!user) {
-      navigation.navigate('Auth');
-      return;
-    }
-    
-    const admin = {
-      email: 'admin@test.com',
-      name: 'Администратор клиники'
-    };
-    
-    navigation.navigate('Chat', { recipient: admin });
-  };
-
   return (
-    <ImageBackground 
-      source={require('../assets/background.png')} 
+    <ImageBackground
+      source={require('../assets/background.png')}
       style={styles.background}
     >
       <ScrollView style={styles.container}>
-        <Text style={styles.title}>О нашей клинике</Text>
-        
-        <Text style={styles.description}>
-          Мы предоставляем высококачественные стоматологические услуги, 
-          используя современное оборудование и инновационные методики лечения.
-        </Text>
-
-        <Text style={styles.subtitle}>Наши специалисты</Text>
-        {doctors.map(doctor => (
-          <View key={doctor.id} style={styles.doctorCard}>
-            <Image source={doctor.image} style={styles.doctorImage} />
-            <View style={styles.doctorInfo}>
-              <Text style={styles.doctorName}>{doctor.name}</Text>
-              <Text style={styles.doctorSpec}>{doctor.specialization}</Text>
-              <Text style={styles.doctorExp}>{doctor.experience}</Text>
-            </View>
-          </View>
-        ))}
-
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity 
-            style={styles.button}
-            onPress={() => navigation.navigate('Appointment')}
-          >
-            <Text style={styles.buttonText}>Записаться на прием</Text>
+        <View style={styles.promoBlock}>
+          <Text style={styles.promoTitle}>Специальное предложение!</Text>
+          <Text style={styles.promoDescription}>Скидка 20% на все услуги до конца месяца.</Text>
+          <TouchableOpacity style={styles.promoButton}>
+            <Text style={styles.promoButtonText}>Узнать больше</Text>
           </TouchableOpacity>
         </View>
 
-        <TouchableOpacity 
-          style={[styles.button, styles.chatButton]}
-          onPress={handleChatWithClinic}
-        >
-          <Icon name="chat-bubble" size={24} color="white" style={styles.buttonIcon} />
-          <Text style={styles.buttonText}>Чат с клиникой</Text>
-        </TouchableOpacity>
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => navigation.navigate('Specialists')}
+          >
+            <Text style={styles.buttonText}>Доктора</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => navigation.navigate('Appointment')}
+          >
+            <Text style={styles.buttonText}>Записаться</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => navigation.navigate('Contacts')}
+          >
+            <Text style={styles.buttonText}>Контакты</Text>
+          </TouchableOpacity>
+        </View>
+
+        <Text style={styles.description}>
+          Наша стоматологическая клиника - это сочетание многолетнего опыта, передовых технологий и заботы о пациентах.
+          Мы работаем более 15 лет и гордимся доверием тысяч клиентов. В нашей клинике используются только современные методы диагностики и лечения.
+        </Text>
+
+        <Text style={styles.subtitle}>Наша история</Text>
+        <Text style={styles.description}>
+          Клиника была основана в 2008 году группой энтузиастов, стремящихся изменить подход к стоматологии.
+          С тех пор мы прошли долгий путь и стали одной из ведущих клиник в регионе. Мы внедряем инновационные методики,
+          используем новейшие технологии и обеспечиваем индивидуальный подход к каждому пациенту.
+        </Text>
+
+        <Text style={styles.subtitle}>Наши достижения</Text>
+        <Text style={styles.description}>
+          - Лучшая стоматологическая клиника 2023 года по версии «Здоровье нации»
+          - Более 20 000 довольных пациентов
+          - 98% успешных имплантаций
+          - Сертификаты качества и инноваций от ведущих международных организаций
+        </Text>
       </ScrollView>
     </ImageBackground>
   );
@@ -92,85 +73,79 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 16,
   },
-  title: {
-    fontSize: 24,
+  promoBlock: {
+    backgroundColor: '#E0F7FA',
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  promoTitle: {
+    fontSize: 20,
     fontWeight: 'bold',
+    color: '#007AFF',
+    marginBottom: 8,
+  },
+  promoDescription: {
+    fontSize: 16,
+    color: '#444',
     marginBottom: 16,
-    color: '#333',
+  },
+  promoButton: {
+    backgroundColor: '#007AFF',
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    borderRadius: 12,
+    alignItems: 'center',
+  },
+  promoButtonText: {
+    color: 'white',
+    fontSize: 14,
+    fontWeight: 'bold',
   },
   subtitle: {
     fontSize: 20,
     fontWeight: 'bold',
     marginTop: 24,
-    marginBottom: 16,
-    color: '#333',
+    marginBottom: 12,
+    color: '#007AFF',
   },
   description: {
     fontSize: 16,
     lineHeight: 24,
-    marginBottom: 24,
-    color: '#666',
-  },
-  doctorCard: {
-    flexDirection: 'row',
-    backgroundColor: 'rgba(255, 255, 255, 0.9)',
-    borderRadius: 12,
-    padding: 16,
     marginBottom: 16,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-  },
-  doctorImage: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    marginRight: 16,
-  },
-  doctorInfo: {
-    flex: 1,
-  },
-  doctorName: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 4,
-    color: '#333',
-  },
-  doctorSpec: {
-    fontSize: 14,
-    color: '#666',
-    marginBottom: 4,
-  },
-  doctorExp: {
-    fontSize: 14,
-    color: '#007AFF',
+    color: '#444',
+    textAlign: 'justify',
   },
   buttonContainer: {
-    marginTop: 24,
-    marginBottom: 32,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 20,
+    marginTop: 10,
   },
   button: {
     backgroundColor: '#007AFF',
-    padding: 16,
+    paddingVertical: 10,
+    paddingHorizontal: 15,
     borderRadius: 12,
     alignItems: 'center',
+    flex: 1,
+    marginHorizontal: 5,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 2,
   },
   buttonText: {
     color: 'white',
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: 'bold',
-  },
-  chatButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: 16,
-  },
-  buttonIcon: {
-    marginRight: 8,
   },
 });
 
-export default AboutScreen; 
+export default AboutScreen;

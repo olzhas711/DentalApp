@@ -1,49 +1,38 @@
 import React from 'react';
-import { View, Text, StyleSheet, FlatList } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity } from 'react-native';
 
 const services = [
   {
-    id: '1',
-    name: 'Профессиональная чистка',
-    description: 'Профессиональная гигиена полости рта',
-    price: '3000 ₽'
+    id: 'service1',
+    name: 'Чистка зубов',
+    description: 'Профессиональная чистка зубов для поддержания здоровья полости рта.',
+    price: '$100',
+    image: require('../assets/service1.png'),
   },
   {
-    id: '2',
-    name: 'Отбеливание зубов',
-    description: 'Профессиональное отбеливание',
-    price: '15000 ₽'
+    id: 'service2',
+    name: 'Имплантация',
+    description: 'Установка зубных имплантатов для восстановления утраченных зубов.',
+    price: '$2000',
+    image: require('../assets/service2.png'),
   },
-  {
-    id: '3',
-    name: 'Лечение кариеса',
-    description: 'Лечение кариеса любой сложности',
-    price: 'от 4000 ₽'
-  },
-  {
-    id: '4',
-    name: 'Установка брекетов',
-    description: 'Исправление прикуса',
-    price: 'от 30000 ₽'
-  }
 ];
 
 const ServicesScreen = () => {
-  const renderItem = ({ item }) => (
-    <View style={styles.serviceItem}>
-      <Text style={styles.serviceName}>{item.name}</Text>
-      <Text style={styles.serviceDescription}>{item.description}</Text>
-      <Text style={styles.servicePrice}>{item.price}</Text>
-    </View>
-  );
-
   return (
-    <FlatList
-      style={styles.container}
-      data={services}
-      renderItem={renderItem}
-      keyExtractor={item => item.id}
-    />
+    <ScrollView style={styles.container}>
+      {services.map((service) => (
+        <View key={service.id} style={styles.serviceContainer}>
+          <Image source={service.image} style={styles.serviceImage} />
+          <Text style={styles.serviceName}>{service.name}</Text>
+          <Text style={styles.serviceDescription}>{service.description}</Text>
+          <Text style={styles.servicePrice}>{service.price}</Text>
+          <TouchableOpacity style={styles.appointmentButton}>
+            <Text style={styles.appointmentButtonText}>Записаться</Text>
+          </TouchableOpacity>
+        </View>
+      ))}
+    </ScrollView>
   );
 };
 
@@ -51,36 +40,52 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#F5FCFF',
   },
-  serviceItem: {
-    padding: 16,
-    marginBottom: 16,
+  serviceContainer: {
     backgroundColor: 'white',
     borderRadius: 12,
+    padding: 16,
+    marginBottom: 20,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
+    shadowOpacity: 0.2,
     shadowRadius: 4,
-    elevation: 3,
+    elevation: 2,
+  },
+  serviceImage: {
+    width: '100%',
+    height: 150,
+    borderRadius: 12,
+    marginBottom: 10,
   },
   serviceName: {
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: 'bold',
-    marginBottom: 8,
-    color: '#333',
+    marginBottom: 5,
   },
   serviceDescription: {
     fontSize: 16,
-    color: '#666',
-    marginBottom: 12,
-    lineHeight: 22,
+    color: '#555',
+    marginBottom: 5,
   },
   servicePrice: {
-    fontSize: 18,
-    fontWeight: 'bold',
+    fontSize: 16,
     color: '#007AFF',
+    marginBottom: 10,
+  },
+  appointmentButton: {
+    backgroundColor: '#007AFF',
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    borderRadius: 12,
+    alignItems: 'center',
+  },
+  appointmentButtonText: {
+    color: 'white',
+    fontSize: 14,
+    fontWeight: 'bold',
   },
 });
 
-export default ServicesScreen; 
+export default ServicesScreen;

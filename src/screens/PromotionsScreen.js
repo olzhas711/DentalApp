@@ -1,49 +1,35 @@
 import React from 'react';
-import { View, Text, StyleSheet, FlatList } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity } from 'react-native';
 
 const promotions = [
   {
-    id: '1',
-    title: 'Скидка 20% на профессиональную чистку',
-    description: 'Действует до конца месяца',
+    id: 'promo1',
+    name: 'Скидка 20% на все услуги',
+    description: 'Специальное предложение до конца месяца.',
+    image: require('../assets/promo1.png'),
   },
   {
-    id: '2',
-    title: 'Бесплатная консультация ортодонта',
-    description: 'При первом посещении клиники',
+    id: 'promo2',
+    name: 'Бесплатная консультация',
+    description: 'Получите бесплатную консультацию у наших специалистов.',
+    image: require('../assets/promo2.png'),
   },
-  {
-    id: '3',
-    title: 'Отбеливание со скидкой 30%',
-    description: 'Акция действует по выходным',
-  },
-  {
-    id: '4',
-    title: 'Комплексная диагностика',
-    description: 'Полное обследование полости рта за 2500₽',
-  },
-  {
-    id: '5',
-    title: 'Семейная скидка 15%',
-    description: 'При лечении всей семьей',
-  }
 ];
 
 const PromotionsScreen = () => {
-  const renderItem = ({ item }) => (
-    <View style={styles.promotionItem}>
-      <Text style={styles.promotionTitle}>{item.title}</Text>
-      <Text style={styles.promotionDescription}>{item.description}</Text>
-    </View>
-  );
-
   return (
-    <FlatList
-      style={styles.container}
-      data={promotions}
-      renderItem={renderItem}
-      keyExtractor={item => item.id}
-    />
+    <ScrollView style={styles.container}>
+      {promotions.map((promotion) => (
+        <View key={promotion.id} style={styles.promotionContainer}>
+          <Image source={promotion.image} style={styles.promotionImage} />
+          <Text style={styles.promotionName}>{promotion.name}</Text>
+          <Text style={styles.promotionDescription}>{promotion.description}</Text>
+          <TouchableOpacity style={styles.learnMoreButton}>
+            <Text style={styles.learnMoreButtonText}>Узнать больше</Text>
+          </TouchableOpacity>
+        </View>
+      ))}
+    </ScrollView>
   );
 };
 
@@ -51,27 +37,47 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
+    backgroundColor: '#F5FCFF',
   },
-  promotionItem: {
-    padding: 16,
-    marginBottom: 16,
+  promotionContainer: {
     backgroundColor: 'white',
-    borderRadius: 8,
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 20,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
+    shadowOpacity: 0.2,
     shadowRadius: 4,
-    elevation: 3,
+    elevation: 2,
   },
-  promotionTitle: {
+  promotionImage: {
+    width: '100%',
+    height: 150,
+    borderRadius: 12,
+    marginBottom: 10,
+  },
+  promotionName: {
     fontSize: 18,
     fontWeight: 'bold',
-    marginBottom: 8,
+    marginBottom: 5,
   },
   promotionDescription: {
+    fontSize: 16,
+    color: '#555',
+    marginBottom: 10,
+  },
+  learnMoreButton: {
+    backgroundColor: '#007AFF',
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    borderRadius: 12,
+    alignItems: 'center',
+  },
+  learnMoreButtonText: {
+    color: 'white',
     fontSize: 14,
-    color: '#666',
+    fontWeight: 'bold',
   },
 });
 
-export default PromotionsScreen; 
+export default PromotionsScreen;
