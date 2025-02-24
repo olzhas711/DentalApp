@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { TouchableOpacity, View, Text, StyleSheet } from 'react-native';
+import { TouchableOpacity, View, Text, StyleSheet, Image } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { createStackNavigator } from '@react-navigation/stack';
+import { createStackNavigator } from '@react-navigation/stack'; // Используем createStackNavigator, а не createModalNavigator
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useNavigation } from '@react-navigation/native';
 import { useCart } from '../context/CartContext';
@@ -21,7 +21,11 @@ import PatientAppointmentsScreen from '../screens/PatientAppointmentsScreen';
 import ChatScreen from '../screens/ChatScreen';
 import SpecialistsScreen from '../screens/SpecialistsScreen';
 import ContactsScreen from '../screens/ContactsScreen';
+import BranchesScreen from '../screens/BranchesScreen';
+import HomeScreen from '../screens/HomeScreen';
+import PromotionsDetailScreen from '../screens/PromotionsDetailScreen';
 
+// Компонент корзины в верхнем правом углу
 const CartIcon = () => {
   const navigation = useNavigation();
   const { cartItems } = useCart();
@@ -52,6 +56,7 @@ const CartIcon = () => {
   );
 };
 
+// Компонент иконки для табов
 const TabIcon = ({ focused, color, size, name, hasUnread }) => (
   <View>
     <Icon name={name} size={size} color={color} />
@@ -63,6 +68,7 @@ const TabIcon = ({ focused, color, size, name, hasUnread }) => (
   </View>
 );
 
+// Создание навигаторов
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
@@ -127,28 +133,164 @@ const MainTabs = () => {
   );
 };
 
-const AppNavigator = () => {
+// Модальные окна для неавторизованных пользователей
+const UnauthStack = () => {
   return (
     <Stack.Navigator
       screenOptions={{
         headerShown: false,
       }}
     >
-      <Stack.Screen name="Main" component={MainTabs} />
+      <Stack.Screen name="Home" component={HomeScreen} />
+      <Stack.Screen
+        name="Branches"
+        component={BranchesScreen}
+        options={{
+          presentation: 'modal', // Для модального окна
+          headerShown: true,
+          headerTitle: 'Наши филиалы',
+          headerTitleStyle: { fontSize: 20, fontWeight: 'bold', color: '#007AFF' },
+          headerStyle: { backgroundColor: '#F5F5F5' },
+          headerLeft: () => (
+            <TouchableOpacity
+              style={{ padding: 10 }}
+              onPress={() => navigation.goBack()}
+            >
+              <Icon name="close" size={24} color="#007AFF" />
+            </TouchableOpacity>
+          ),
+        }}
+      />
+      <Stack.Screen
+        name="Specialists"
+        component={SpecialistsScreen}
+        options={{
+          presentation: 'modal',
+          headerShown: true,
+          headerTitle: 'Специалисты',
+          headerTitleStyle: { fontSize: 20, fontWeight: 'bold', color: '#007AFF' },
+          headerStyle: { backgroundColor: '#F5F5F5' },
+          headerLeft: () => (
+            <TouchableOpacity
+              style={{ padding: 10 }}
+              onPress={() => navigation.goBack()}
+            >
+              <Icon name="close" size={24} color="#007AFF" />
+            </TouchableOpacity>
+          ),
+        }}
+      />
+      <Stack.Screen
+        name="Services"
+        component={ServicesScreen}
+        options={{
+          presentation: 'modal',
+          headerShown: true,
+          headerTitle: 'Услуги',
+          headerTitleStyle: { fontSize: 20, fontWeight: 'bold', color: '#007AFF' },
+          headerStyle: { backgroundColor: '#F5F5F5' },
+          headerLeft: () => (
+            <TouchableOpacity
+              style={{ padding: 10 }}
+              onPress={() => navigation.goBack()}
+            >
+              <Icon name="close" size={24} color="#007AFF" />
+            </TouchableOpacity>
+          ),
+        }}
+      />
+      <Stack.Screen
+        name="Shop"
+        component={ShopScreen}
+        options={{
+          presentation: 'modal',
+          headerShown: true,
+          headerTitle: 'Магазин',
+          headerTitleStyle: { fontSize: 20, fontWeight: 'bold', color: '#007AFF' },
+          headerStyle: { backgroundColor: '#F5F5F5' },
+          headerLeft: () => (
+            <TouchableOpacity
+              style={{ padding: 10 }}
+              onPress={() => navigation.goBack()}
+            >
+              <Icon name="close" size={24} color="#007AFF" />
+            </TouchableOpacity>
+          ),
+          headerRight: () => <CartIcon />,
+        }}
+      />
+      <Stack.Screen
+        name="PromotionsDetail"
+        component={PromotionsDetailScreen}
+        options={{
+          presentation: 'modal',
+          headerShown: true,
+          headerTitle: 'Детали акций',
+          headerTitleStyle: { fontSize: 20, fontWeight: 'bold', color: '#007AFF' },
+          headerStyle: { backgroundColor: '#F5F5F5' },
+          headerLeft: () => (
+            <TouchableOpacity
+              style={{ padding: 10 }}
+              onPress={() => navigation.goBack()}
+            >
+              <Icon name="close" size={24} color="#007AFF" />
+            </TouchableOpacity>
+          ),
+        }}
+      />
       <Stack.Screen
         name="Auth"
         component={AuthScreen}
         options={{
+          presentation: 'modal',
           headerShown: true,
-          title: 'Авторизация'
+          headerTitle: 'Авторизация',
+          headerTitleStyle: { fontSize: 20, fontWeight: 'bold', color: '#007AFF' },
+          headerStyle: { backgroundColor: '#F5F5F5' },
+          headerLeft: () => (
+            <TouchableOpacity
+              style={{ padding: 10 }}
+              onPress={() => navigation.goBack()}
+            >
+              <Icon name="close" size={24} color="#007AFF" />
+            </TouchableOpacity>
+          ),
         }}
       />
+    </Stack.Navigator>
+  );
+};
+
+// Главный навигатор
+const AppNavigator = () => {
+  const { user, loading } = useAuth();
+
+  if (loading) {
+    return <View style={styles.loading}><Text>Загрузка...</Text></View>; // Простой индикатор загрузки
+  }
+
+  return (
+    <Stack.Navigator
+      screenOptions={{
+        headerShown: false,
+      }}
+    >
+      {user ? (
+        // Авторизованные пользователи
+        <Stack.Screen name="Main" component={MainTabs} />
+      ) : (
+        // Неавторизованные пользователи
+        <Stack.Screen name="Unauth" component={UnauthStack} />
+      )}
       <Stack.Screen
         name="Cart"
         component={CartScreen}
         options={{
           headerShown: true,
-          title: 'Корзина'
+          title: 'Корзина',
+          headerRight: () => <CartIcon />,
+          headerTitleStyle: { fontSize: 20, fontWeight: 'bold', color: '#007AFF' },
+          headerStyle: { backgroundColor: '#F5F5F5' },
         }}
       />
       <Stack.Screen
@@ -156,7 +298,9 @@ const AppNavigator = () => {
         component={ChatScreen}
         options={({ route }) => ({
           headerShown: true,
-          title: `Чат с ${route.params.recipient.name}`
+          title: `Чат с ${route.params.recipient.name}`,
+          headerTitleStyle: { fontSize: 20, fontWeight: 'bold', color: '#007AFF' },
+          headerStyle: { backgroundColor: '#F5F5F5' },
         })}
       />
       <Stack.Screen
@@ -164,7 +308,9 @@ const AppNavigator = () => {
         component={AppointmentScreen}
         options={{
           headerShown: true,
-          title: 'Запись на прием'
+          title: 'Запись на прием',
+          headerTitleStyle: { fontSize: 20, fontWeight: 'bold', color: '#007AFF' },
+          headerStyle: { backgroundColor: '#F5F5F5' },
         }}
       />
     </Stack.Navigator>
@@ -172,6 +318,11 @@ const AppNavigator = () => {
 };
 
 const styles = StyleSheet.create({
+  loading: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   badge: {
     position: 'absolute',
     top: -2,

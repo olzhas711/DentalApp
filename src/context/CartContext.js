@@ -43,17 +43,22 @@ export const CartProvider = ({ children }) => {
     }, 0);
   };
 
+  const clearCart = () => {
+    setCartItems([]); // Метод для очистки корзины
+  };
+
   return (
     <CartContext.Provider value={{
       cartItems,
       addToCart,
       removeFromCart,
       updateQuantity,
-      getCartTotal
+      getCartTotal,
+      clearCart, // Добавлен новый метод
     }}>
       {children}
     </CartContext.Provider>
   );
 };
 
-export const useCart = () => useContext(CartContext); 
+export const useCart = () => useContext(CartContext);

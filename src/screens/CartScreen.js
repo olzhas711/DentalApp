@@ -1,11 +1,13 @@
 import React from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image } from 'react-native';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image, Alert } from 'react-native';
 import { useCart } from '../context/CartContext';
 import { useNavigation } from '@react-navigation/native';
+import { useAuth } from '../context/AuthContext'; // Для проверки авторизации
 
 const CartScreen = () => {
   const navigation = useNavigation();
   const { cartItems, removeFromCart, updateQuantity, getCartTotal } = useCart();
+  const { user } = useAuth(); // Проверка авторизации
 
   const renderItem = ({ item }) => (
     <View style={styles.cartItem}>
@@ -44,13 +46,75 @@ const CartScreen = () => {
         <Text style={styles.emptyText}>Корзина пуста</Text>
         <TouchableOpacity 
           style={styles.shopButton}
-          onPress={() => navigation.navigate('Магазин')}
+          onPress={() => navigation.navigate('Shop')} // Исправлено с 'Магазин' на 'Shop'
         >
           <Text style={styles.shopButtonText}>Перейти в магазин</Text>
         </TouchableOpacity>
       </View>
     );
   }
+
+  const handleCheckout = () => {
+    if (!user) {
+      // Если пользователь не авторизован — предложение войти или зарегистрироваться
+      Alert.alert(
+        'Авторизация требуется',
+        'Пожалуйста, войдите или зарегистрируйтесь для оформления заказа.',
+        [
+          {
+            text: 'Войти',
+            onPress: () => navigation.navigate('Auth', { isRegistration: false }),
+          },
+          {
+            text: 'Зарегистрироваться',
+            onPress: () => navigation.navigate('Auth', { isRegistration: true }),
+            style: 'default',
+          },
+          {
+            text: 'Отмена',
+            style: 'cancel',
+          },
+        ]
+      );
+      return;
+    }
+
+    // Если авторизован — временная логика для оформления заказа (псевдокод для СБП)
+    Alert.alert(
+      'Оформление заказа',
+      `Итоговая сумма: ${getCartTotal()} ₽. Подтвердить оплату через СБП?`,
+      [
+        {
+          text: 'Подтвердить',
+          onPress: () => {
+            // Здесь должна быть интеграция с API СБП (например, через ЮKassa или CloudPayments)
+            // Псевдокод:
+            /*
+            try {
+              const paymentResponse = await axios.post('http://91.244.163.22:5000/api/payments', {
+                amount: getCartTotal(),
+                cartItems,
+                userId: user.id,
+              });
+              Alert.alert('Успех', 'Оплата успешно выполнена!');
+              // Очистка корзины после оплаты
+              setCartItems([]); // Нужно обновить CartContext для очистки
+            } catch (error) {
+              Alert.alert('Ошибка', 'Не удалось выполнить оплату. Попробуйте позже.');
+            }
+            */
+            Alert.alert('Успех', 'Оплата успешно выполнена! (Тестовый режим)');
+            // Очистка корзины после успешной оплаты (временная логика)
+            setCartItems([]); // Нужно обновить CartContext для очистки
+          },
+        },
+        {
+          text: 'Отмена',
+          style: 'cancel',
+        },
+      ]
+    );
+  };
 
   return (
     <View style={styles.container}>
@@ -61,7 +125,7 @@ const CartScreen = () => {
       />
       <View style={styles.totalContainer}>
         <Text style={styles.totalText}>Итого: {getCartTotal()} ₽</Text>
-        <TouchableOpacity style={styles.checkoutButton}>
+        <TouchableOpacity style={styles.checkoutButton} onPress={handleCheckout}>
           <Text style={styles.checkoutButtonText}>Оформить заказ</Text>
         </TouchableOpacity>
       </View>
@@ -176,4 +240,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CartScreen; 
+export default CartScreen;

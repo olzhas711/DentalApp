@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, ImageBackground, Image } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, ImageBackground } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 const AboutScreen = ({ navigation }) => {
@@ -37,6 +37,13 @@ const AboutScreen = ({ navigation }) => {
             onPress={() => navigation.navigate('Contacts')}
           >
             <Text style={styles.buttonText}>Контакты</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => navigation.navigate('Branches')}
+          >
+            <Text style={styles.buttonText}>Филиалы</Text>
           </TouchableOpacity>
         </View>
 
